@@ -22,26 +22,7 @@ class ChapterSelectionWidget extends StatelessWidget {
       appBar: AppBar(
         title: Text('Select a Chapter - $book'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: x.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('Chapter ${x[index]}'),
-              onTap: () {
-                _loadChapterContent(
-                  context,
-                  book,
-                  x[index],
-                  booksOfBibleEng,
-                  selectedLanguage,
-                );
-              },
-            );
-          },
-        ),
-      ),
+      body: _buildChapterList(context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to the next chapter
@@ -55,6 +36,29 @@ class ChapterSelectionWidget extends StatelessWidget {
           );
         },
         child: Icon(Icons.arrow_forward),
+      ),
+    );
+  }
+
+  Widget _buildChapterList(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.builder(
+        itemCount: x.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('Chapter ${x[index]}'),
+            onTap: () {
+              _loadChapterContent(
+                context,
+                book,
+                x[index],
+                booksOfBibleEng,
+                selectedLanguage,
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -83,17 +87,12 @@ class ChapterSelectionWidget extends StatelessWidget {
           'assets/${selectedLanguage == 'English' ? 'Eng' : 'Tur'}/$book/$book$selectedChapter.txt';
       String chapterContent = await rootBundle.loadString(filePath);
 
-      Navigator.push(
+      _navigateToVerseDisplay(
         context,
-        MaterialPageRoute(
-          builder: (context) => VerseDisplayWidget(
-            book: book,
-            chapter: selectedChapter,
-            content: chapterContent,
-            maxChapters: x,
-            selectedLanguage: selectedLanguage,
-          ),
-        ),
+        book,
+        selectedChapter,
+        chapterContent,
+        selectedLanguage,
       );
     } catch (e) {
       print('Error loading chapter content: $e');
@@ -104,5 +103,26 @@ class ChapterSelectionWidget extends StatelessWidget {
         ),
       );
     }
+  }
+
+  void _navigateToVerseDisplay(
+      BuildContext context,
+      String book,
+      int selectedChapter,
+      String chapterContent,
+      String selectedLanguage,
+      ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VerseDisplayWidget(
+          book: book,
+          chapter: selectedChapter,
+          content: chapterContent,
+          maxChapters: x,
+          selectedLanguage: selectedLanguage,
+        ),
+      ),
+    );
   }
 }
