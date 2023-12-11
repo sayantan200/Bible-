@@ -99,7 +99,7 @@ class ChapterSelectionWidget extends StatelessWidget {
       // Provide feedback to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error loading chapter content. Please try again.'),
+          content: const Text('Error loading chapter content. Please try again.'),
         ),
       );
     }

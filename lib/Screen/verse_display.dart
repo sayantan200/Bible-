@@ -30,21 +30,21 @@ class VerseDisplayWidget extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Text(
                   content,
-                  style: TextStyle(fontSize: 23.0),
+                  style: const TextStyle(fontSize: 23.0),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
-                  onPressed: () => _navigateToChapter(context, book, chapter - 1, selectedLanguage),
-                  child: Text('Previous Chapter'),
+                  onPressed: () => _navigateToPreviousChapter(context),
+                  child: const Text('Previous Chapter'),
                 ),
                 ElevatedButton(
-                  onPressed: () => _navigateToNextChapter(context, book, chapter, maxChapters, selectedLanguage),
-                  child: Text('Next Chapter'),
+                  onPressed: () => _navigateToNextChapter(context),
+                  child: const Text('Next Chapter'),
                 ),
               ],
             ),
@@ -54,27 +54,39 @@ class VerseDisplayWidget extends StatelessWidget {
     );
   }
 
-  void _navigateToNextChapter(BuildContext context, String book, int currentChapter, List<int> maxChapters, String selectedLanguage) async {
-    final bookIndex = maxChapters.indexOf(maxChapters.firstWhere((element) => element >= currentChapter));
+  // Navigate to the next chapter content
+  void _navigateToNextChapter(BuildContext context) async {
+    int nextChapter = chapter + 1;
 
-    int nextBookIndex = bookIndex + 1;
-    if (nextBookIndex >= maxChapters.length) {
-      print('Already at the end of the Bible');
-      return;
+    if (nextChapter > maxChapters.last) {
+      // If the next chapter exceeds the last chapter of the current book, check for the next book
+      int nextBookIndex = maxChapters.indexOf(maxChapters.firstWhere((element) => element > chapter));
+
+      if (nextBookIndex >= 0 && nextBookIndex < maxChapters.length) {
+        String nextBook = maxChapters[nextBookIndex].toString();
+        nextChapter = 1; // Reset to the first chapter of the next book
+
+        _navigateToChapterContent(context, nextBook, nextChapter);
+      } else {
+        print('Already at the end of the Bible');
+      }
+    } else {
+      // Otherwise, navigate to the next chapter in the current book
+      _navigateToChapterContent(context, book, nextChapter);
     }
+  }
 
-    String nextBook = maxChapters[nextBookIndex].toString();
-    int nextChapter = currentChapter <= maxChapters[nextBookIndex] ? currentChapter : 1;
-
-    String filePath = 'assets/${selectedLanguage == 'English' ? 'Eng' : 'Tur'}/$nextBook/$nextBook$nextChapter.txt';
+  // Navigate to a specific chapter content
+  void _navigateToChapterContent(BuildContext context, String book, int chapter) async {
+    String filePath = 'assets/${selectedLanguage == 'English' ? 'Eng' : 'Tur'}/$book/$book$chapter.txt';
     String chapterContent = await rootBundle.loadString(filePath);
 
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => VerseDisplayWidget(
-          book: nextBook,
-          chapter: nextChapter,
+          book: book,
+          chapter: chapter,
           content: chapterContent,
           maxChapters: maxChapters,
           selectedLanguage: selectedLanguage,
@@ -83,88 +95,25 @@ class VerseDisplayWidget extends StatelessWidget {
     );
   }
 
-  void _navigateToChapter(BuildContext context, String book, int selectedChapter, String selectedLanguage) async {
-    final bookIndex = maxChapters.indexOf(maxChapters.firstWhere((element) => element >= chapter));
+  // Navigate to the previous chapter content
+  void _navigateToPreviousChapter(BuildContext context) async {
+    int previousChapter = chapter - 1;
 
-    if (selectedChapter < 1) {
-      int previousBookIndex = bookIndex - 1;
-      if (previousBookIndex < 0) {
+    if (previousChapter < 1) {
+      // If the previous chapter is less than 1, check for the previous book
+      int previousBookIndex = maxChapters.indexOf(maxChapters.firstWhere((element) => element >= chapter)) - 1;
+
+      if (previousBookIndex >= 0) {
+        String previousBook = maxChapters[previousBookIndex].toString();
+        int lastChapterOfPreviousBook = maxChapters[previousBookIndex];
+
+        _navigateToChapterContent(context, previousBook, lastChapterOfPreviousBook);
+      } else {
         print('Already at the beginning of the Bible');
-        return;
       }
-
-      String previousBook = getBookName(previousBookIndex);
-      int previousChapter = maxChapters[previousBookIndex];
-
-      String filePath = 'assets/${selectedLanguage == 'English' ? 'Eng' : 'Tur'}/$previousBook/$previousBook$previousChapter.txt';
-      String chapterContent = await rootBundle.loadString(filePath);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerseDisplayWidget(
-            book: previousBook,
-            chapter: previousChapter,
-            content: chapterContent,
-            maxChapters: maxChapters,
-            selectedLanguage: selectedLanguage,
-          ),
-        ),
-      );
-    } else if (selectedChapter > maxChapters[bookIndex]) {
-      int nextBookIndex = bookIndex + 1;
-      if (nextBookIndex >= maxChapters.length) {
-        print('Already at the end of the Bible');
-        return;
-      }
-
-      String nextBook = getBookName(nextBookIndex);
-      int nextChapter = selectedChapter <= maxChapters[nextBookIndex] ? selectedChapter : 1;
-
-      String filePath = 'assets/${selectedLanguage == 'English' ? 'Eng' : 'Tur'}/$nextBook/$nextBook$nextChapter.txt';
-      String chapterContent = await rootBundle.loadString(filePath);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerseDisplayWidget(
-            book: nextBook,
-            chapter: nextChapter,
-            content: chapterContent,
-            maxChapters: maxChapters,
-            selectedLanguage: selectedLanguage,
-          ),
-        ),
-      );
     } else {
-      String filePath = 'assets/${selectedLanguage == 'English' ? 'Eng' : 'Tur'}/$book/$book$selectedChapter.txt';
-      String chapterContent = await rootBundle.loadString(filePath);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VerseDisplayWidget(
-            book: book,
-            chapter: selectedChapter,
-            content: chapterContent,
-            maxChapters: maxChapters,
-            selectedLanguage: selectedLanguage,
-          ),
-        ),
-      );
+      // Otherwise, navigate to the previous chapter in the current book
+      _navigateToChapterContent(context, book, previousChapter);
     }
   }
-
-  String getBookName(int bookIndex) {
-    // Replace this logic with your actual book name retrieval logic
-    // For example, if you have a list of book names, you can use that list
-    List<String> bookNames = ["Genesis", "Exodus", "Leviticus", ""]; // Replace with your book names
-    if (bookIndex >= 0 && bookIndex < bookNames.length) {
-      return bookNames[bookIndex];
-    } else {
-      // Handle out-of-bounds index or other cases
-      return "Unknown Book";
-    }
-  }
-
 }
