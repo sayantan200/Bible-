@@ -1,0 +1,227 @@
+name: bible
+description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  audioplayers: ^5.2.1
+  path_provider: ^2.0.14  
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/bible_data.json
+    - assets/Eng/
+    - assets/Tur/
+    - assets/Eng/1 Chronicles/
+    - assets/Eng/Genesis/
+    - assets/Eng/Exodus/
+    - assets/Eng/Leviticus/
+    - assets/Eng/Numbers/
+    - assets/Eng/Deuteronomy/
+    - assets/Eng/Joshua/
+    - assets/Eng/Judges/
+    - assets/Eng/Ruth/
+    - assets/Eng/1 Samuel/
+    - assets/Eng/2 Samuel/
+    - assets/Eng/1 Kings/
+    - assets/Eng/2 Kings/
+    - assets/Eng/2 Chronicles/
+    - assets/Eng/Ezra/
+    - assets/Eng/Nehemiah/
+    - assets/Eng/Esther/
+    - assets/Eng/Job/
+    - assets/Eng/Psalms/
+    - assets/Eng/Proverbs/
+    - assets/Eng/Ecclesiastes/
+    - assets/Eng/Song of Solomon/
+    - assets/Eng/Isaiah/
+    - assets/Eng/Jeremiah/
+    - assets/Eng/Lamentations/
+    - assets/Eng/Ezekiel/
+    - assets/Eng/Daniel/
+    - assets/Eng/Hosea/
+    - assets/Eng/Joel/
+    - assets/Eng/Amos/
+    - assets/Eng/Obadiah/
+    - assets/Eng/Jonah/
+    - assets/Eng/Micah/
+    - assets/Eng/Nahum/
+    - assets/Eng/Habakkuk/
+    - assets/Eng/Zephaniah/
+    - assets/Eng/Haggai/
+    - assets/Eng/Zechariah/
+    - assets/Eng/Malachi/
+    - assets/Eng/Matthew/
+    - assets/Eng/Mark/
+    - assets/Eng/Luke/
+    - assets/Eng/John/
+    - assets/Eng/Acts/
+    - assets/Eng/Romans/
+    - assets/Eng/1 Corinthians/
+    - assets/Eng/2 Corinthians/
+    - assets/Eng/Galatians/
+    - assets/Eng/Ephesians/
+    - assets/Eng/Philippians/
+    - assets/Eng/Colossians/
+    - assets/Eng/1 Thessalonians/
+    - assets/Eng/2 Thessalonians/
+    - assets/Eng/1 Timothy/
+    - assets/Eng/2 Timothy/
+    - assets/Eng/Titus/
+    - assets/Eng/Philemon/
+    - assets/Eng/Hebrews/
+    - assets/Eng/James/
+    - assets/Eng/1 Peter/
+    - assets/Eng/2 Peter/
+    - assets/Eng/1 John/
+    - assets/Eng/2 John/
+    - assets/Eng/3 John/
+    - assets/Eng/Jude/
+    - assets/Eng/Revelation/
+    - assets/Tur/Tekvin/
+    - assets/Tur/Çıkışı/
+    - assets/Tur/Levililer/
+    - assets/Tur/Sayılar/
+    - assets/Tur/Tesniye/
+    - assets/Tur/Yeşu/
+    - assets/Tur/Hakimler/
+    - assets/Tur/Rut/
+    - assets/Tur/I Samuel/
+    - assets/Tur/II Samuel/
+    - assets/Tur/I Krallar/
+    - assets/Tur/II Krallar/
+    - assets/Tur/I Tarihler/
+    - assets/Tur/II Tarihler/
+    - assets/Tur/Ezra/
+    - assets/Tur/Nehemya/
+    - assets/Tur/Ester/
+    - assets/Tur/Eyüp/
+    - assets/Tur/Mezmurlar/
+    - assets/Tur/Meseller/
+    - assets/Tur/Vaiz/
+    - assets/Tur/Süleyman'in Ezgisi/
+    - assets/Tur/Yeşaya/
+    - assets/Tur/Yeremya/
+    - assets/Tur/Ağıtlar/
+    - assets/Tur/Yehezkel/
+    - assets/Tur/Daniel/
+    - assets/Tur/Hoşea/
+    - assets/Tur/Yoel/
+    - assets/Tur/Amos/
+    - assets/Tur/Ovadya/
+    - assets/Tur/Yunus/
+    - assets/Tur/Mika/
+    - assets/Tur/Nahum/
+    - assets/Tur/Habakkuk/
+    - assets/Tur/Zefanya/
+    - assets/Tur/Haggay/
+    - assets/Tur/Zekeriya/
+    - assets/Tur/Malaki/
+    - assets/Tur/Matta/
+    - assets/Tur/Markos/
+    - assets/Tur/Luka/
+    - assets/Tur/Yuhanna/
+    - assets/Tur/Elçilerin İşleri/
+    - assets/Tur/Romalılar/
+    - assets/Tur/I Korintliler/
+    - assets/Tur/II Korintliler/
+    - assets/Tur/Galatyalilar/
+    - assets/Tur/Efesliler/
+    - assets/Tur/Filipililer/
+    - assets/Tur/Koloseliler/
+    - assets/Tur/I Selanikliler/
+    - assets/Tur/II Selanikliler/
+    - assets/Tur/I Timoteos/
+    - assets/Tur/II Timoteos/
+    - assets/Tur/Titus/
+    - assets/Tur/Filemon/
+    - assets/Tur/İbraniler/
+    - assets/Tur/Yakup/
+    - assets/Tur/I Petrus/
+    - assets/Tur/II Petrus/
+    - assets/Tur/I Yuhanna/
+    - assets/Tur/II Yuhanna/
+    - assets/Tur/III Yuhanna/
+    - assets/Tur/Yahuda/
+    - assets/Tur/Vahiy/
+
+
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
