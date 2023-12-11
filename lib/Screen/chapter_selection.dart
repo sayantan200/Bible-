@@ -22,22 +22,25 @@ class ChapterSelectionWidget extends StatelessWidget {
       appBar: AppBar(
         title: Text('Select a Chapter - $book'),
       ),
-      body: ListView.builder(
-        itemCount: x.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('Chapter ${x[index]}'),
-            onTap: () {
-              _loadChapterContent(
-                context,
-                book,
-                x[index],
-                booksOfBibleEng,
-                selectedLanguage,
-              );
-            },
-          );
-        },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+          itemCount: x.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Chapter ${x[index]}'),
+              onTap: () {
+                _loadChapterContent(
+                  context,
+                  book,
+                  x[index],
+                  booksOfBibleEng,
+                  selectedLanguage,
+                );
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -67,6 +70,12 @@ class ChapterSelectionWidget extends StatelessWidget {
 
       if (selectedChapter < 1 || selectedChapter > maxChapters) {
         print('Invalid chapter selected: $selectedChapter');
+        // Provide feedback to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Invalid chapter selected: $selectedChapter'),
+          ),
+        );
         return;
       }
 
@@ -88,6 +97,12 @@ class ChapterSelectionWidget extends StatelessWidget {
       );
     } catch (e) {
       print('Error loading chapter content: $e');
+      // Provide feedback to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading chapter content. Please try again.'),
+        ),
+      );
     }
   }
 }
