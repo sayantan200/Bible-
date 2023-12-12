@@ -12,6 +12,10 @@ class BibleDataService {
       booksOfBibleTur: List<String>.from(jsonData['booksOfBibleTur']),
       booksOfBibleEng: List<String>.from(jsonData['booksOfBibleEng']),
       chaptersForAll: List<int>.from(jsonData['chaptersForAll']),
+      turAudioName: (jsonData['turAudioName'] as List<dynamic>)
+          .map((audioNames) =>
+              List<String>.from(audioNames.map((name) => name as String)))
+          .toList(),
     );
   }
 }
