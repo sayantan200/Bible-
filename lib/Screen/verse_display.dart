@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:bible/models/bible_data.dart';
 
 class VerseDisplayWidget extends StatelessWidget {
   final String book;
@@ -33,6 +35,30 @@ class VerseDisplayWidget extends StatelessWidget {
                   style: const TextStyle(fontSize: 23.0),
                 ),
               ),
+            ),
+            IconButton(
+              icon: Icon(Icons.play_arrow),
+              onPressed: () {
+                // Check if the book is in the New Testament and the language is Turkish
+                if (book.indexOf(book) >= 39 && selectedLanguage == 'Turkish') {
+                  String audioName = BibleData
+                      .turAudioName[book.indexOf(book) - 39][chapter - 1];
+                  String audioUrl =
+                      'https://incil.online/data/files/$audioName.mp3';
+
+                  AudioPlayer audioPlayer = AudioPlayer();
+                  audioPlayer.play(UrlSource(audioUrl));
+                } else {
+                  // Display a message or take appropriate action if conditions are not met
+                  // For example, you can show a snackbar or toast message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          'Audio not available for this book or language.'),
+                    ),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 16.0),
             Row(
