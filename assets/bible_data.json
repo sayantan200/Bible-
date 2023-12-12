@@ -28,6 +28,32 @@
       50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150, 31, 12,
       8, 66, 52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4, 28, 16, 24, 21, 28,
       16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22
-    ]
+    ],
+    "turAudioName" : [["matta-01","matta-02","matta-03","matta-04","matta-05","matta-06","matta-07","matta-08","matta-09","matta-10","matta-11","matta-12","matta-13","matta-14yeni","matta-15","matta-16","matta-17","matta-18","matta-19","matta-20","matta-21","matta-22","matta-23","matta-24","matta-25","matta-26","matta-27","matta-28"],
+    ["markos-01","markos-02","markos-03","markos-04","markos-05","markos-06","markos-07","markos-08","markos-09","markos-10","markos-11","markos-12","markos-13","markos-14","markos-15","markos-16"],
+    ["luka-01","luka-02","luka-03","luka-04","luka-05","luka-06","luka-07","luka-08","luka-09","luka-10","luka-11","luka-12","luka-13","luka-14","luka-15","luka-16","luka-17","luka-18","luka-19","luka-20","luka-21","luka-22","luka-23","luka-24"],
+    ["yuhannatrokuma-01-2022-02","yuhannatrokuma-02-2022-02","yuhannatrokuma-03-2022-02","yuhannatrokuma-04-2022-02","yuhannatrokuma-05-2022-02","yuhannatrokuma-06-2022-02","yuhannatrokuma-07-2022-02","yuhannatrokuma-08-2022-02","yuhannatrokuma-09-2022-02","yuhannatrokuma-10-2022-02","yuhannatrokuma-11-2022-02","yuhannatrokuma-12-2022-02","yuhannatrokuma-13-2022-02","yuhannatrokuma-14-2022-02","yuhannatrokuma-15-2022-02","yuhannatrokuma-16-2022-02","yuhannatrokuma-17-2022-02","yuhannatrokuma-18-2022-02","yuhannatrokuma-19-2022-02","yuhannatrokuma-20-2022-02","yuhannatrokuma-21-2022-02"],
+    ["elilerinleri-1","elilerinleri-2","elilerinleri-3","elilerinleri-4","elilerinleri-5","elilerinleri-6","elilerinleri-7","elilerinleri-8","elilerinleri-9","elilerinleri-10","elilerinleri-11","elilerinleri-12","elilerinleri-13","elilerinleri-14","elilerinleri-15","elilerinleri-16","elilerinleri-17","elcilerinileri-18","elilerinleri-19","elilerinileri-20","elilerinileri-21","elilerinileri-22","elilerinileri-23","elilerinileri-24","elilerinileri-25","elilerinileri-26","elilerinileri-27","elilerinileri-28son"],
+    ["romallara-1._1684243323","romallara-2.","romallara-3.","romallara-4.","romallara-5.","romallara-6.","romallara-7.","romallara-8.","romallara-9.","romallara-10.","romallara-11.","romallara-12.","romallara-13.","romallara-14.","romallara-15.","romallara-16."],
+    ["korintliler1.blm","korintliler2.blm","korintliler3.blm","korintliler4.blm","korintliler5.blm","korintliler6.blm","korintliler7.blm","korintliler8.blm","korintliler9.blm","korintliler10.blm","korintliler11.blm","korintliler12.blm","korintliler13.blm","korintliler14.blm","korintliler15.blm","korintliler16.blm"],
+    ["2.korintliler1.blm","2.korintliler2.blm","2.korintliler3.blm","2.korintliler4.blm","2.korintliler5.blm","2.korintliler6.blm","2.korintliler7.blm","2.korintliler8.blm","2.korintliler9.blm","2.korintliler10.blm","2.korintliler11.blm","2.korintliler12.blm","2.korintliler13.blm"],
+    ["galatyallar-1","galatyallar-2","galatyallar-3","galatyallar-4","galatyallar-5","galatyallar-6"],
+    ["efesliler-01","efesliler-02","efesliler-03","efesliler-04","efesliler-05","efesliler-06"],
+    ["filipililer1.blm","filipililer2.blm","filipililer3.blm","filipililer4.blm"],
+    ["colossians1updated","koloseliler2.blm","koloseliler3.blm","koloseliler4.blm"],
+    ["selanikliler1.mektup1.blm","selanikliler1.mektup2.blm","selanikliler1.mektup3.blm","selanikliler1.mektup4.blm","selanikliler1.mektup5.blm"],
+    ["selanikliler2.mektup1.blm","selanikliler2.mektup2.blm","selanikliler2.mektup3.blm"],
+    ["timeteos1.mektup1.blm","timeteos1.mektup2.blm","timeteos1.mektup3.blm","timeteos1.mektup4.blm","timeteos1.mektup5.blm","timeteos1.mektup6.blm"],
+    ["timeteos2.mektup1.blm","timeteos2.mektup2.blm","timeteos2.mektup3.blm","timeteos2.mektup4.blm"],
+    ["titus1.blm","titus2.blm","titus3.blm"],
+    ["filimonbitenblm"],
+    ["braniler-1.","braniler-2.","braniler-3.","braniler-4.","braniler-5.","braniler-6.","braniler-7.","braniler-8.","braniler-9.","braniler-10.","braniler-11.","braniler-12.","braniler-13."],
+    ["yakup1.blm","yakup2.blm","yakup3.blm","yakup4.blm","yakup5.blm"],
+    ["petrus1.mektupblm1","petrus1.mektupblm2","petrus1.mektupblm3","petrus1.mektupblm4","petrus1.mektupblm5"],
+    ["petrus2.mektupblm1","petrus2.mektupblm2","petrus2.mektupblm3"],
+    ["1.yuhanna-1.","1.yuhanna-2.","1.yuhanna-3.","1.yuhanna-4.","1.yuhanna-5."],
+    ["2.yuhanna-1."],
+    ["3.yuhanna-1."],["yahuda-1."],
+    ["vahiy-1.","vahiy-2.","vahiy-3.","vahiy-4.","vahiy-5.","vahiy-6.","vahiy-7.","vahiy-8.","vahiy-9.","vahiy-10.","vahiy-11.","vahiy-12.","vahiy-13.","vahiy-14.","vahiy-15.","vahiy-16.","vahiy-17.","vahiy-18.","vahiy-19.","vahiy-20.","vahiy-21.","vahiy-22."]]
   }
   
