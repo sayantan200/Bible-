@@ -28,6 +28,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
   bool isPlaying = false;
   int timeProgress = 0;
   int audioDuration = 0;
+  
 
   Widget slider() {
     return Column(
@@ -99,15 +100,15 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
       setState(() {
         audioDuration = duration.inSeconds;
       });
+      print('Duration changed: $audioDuration seconds');
     });
 
-    
-    
-    /*audioPlayer.onPlayerUpdate.listen((event) {
+    audioPlayer.onPositionChanged.listen((Duration position) {
       setState(() {
-        timeProgress = event.position.inSeconds;
+        timeProgress = position.inSeconds;
+        print('Duration changed: $timeProgress seconds');
       });
-    });*/
+    });
 
     _loadBibleData();
   }
@@ -136,6 +137,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                 ),
               ),
             ),
+            
             IconButton(
               icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
               onPressed: () async {
@@ -143,11 +145,12 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                   pauseMusic();
                 } else {
                   // Check if the book is in the New Testament and the language is Turkish
-                  if (widget.book.indexOf(widget.book) >= 0 &&
-                      widget.selectedLanguage == 'Turkish') {
-                    String audioName =
-                        bibleData.turAudioName[widget.book.indexOf(widget.book)]
-                            [widget.chapter - 1];
+                  int bookIndex =
+                      bibleData.booksOfBibleTur.indexOf(widget.book);
+                  if (bookIndex >= 39 && widget.selectedLanguage == 'Turkish') {
+                    print('$bookIndex');
+                    String audioName = bibleData.turAudioName[bookIndex - 39]
+                        [widget.chapter - 1];
                     String audioUrl =
                         'https://incil.online/data/files/$audioName.mp3';
 
@@ -168,8 +171,12 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                 }
               },
             ),
+            
+            
             if (isPlaying) slider(),
             const SizedBox(height: 16.0),
+            
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
