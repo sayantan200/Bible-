@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bible/models/bible_data.dart';
 import 'package:bible/Services/bible_data_loader.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VerseDisplayWidget extends StatefulWidget {
   final String book;
@@ -28,7 +29,6 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
   bool isPlaying = false;
   int timeProgress = 0;
   int audioDuration = 0;
-  
 
   Widget slider() {
     return Column(
@@ -124,6 +124,18 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Verses - ${widget.book} Chapter ${widget.chapter}'),
+        actions: [
+          // Add the email icon button
+          IconButton(
+            icon: Icon(Icons.email),
+            onPressed: () {
+              // Open email with the specified address and subject
+              launch(
+                'mailto:josephdaniellepalmer@me.com?subject=İncil',
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -137,59 +149,66 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                 ),
               ),
             ),
-            
-            IconButton(
-              icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: () async {
-                if (isPlaying) {
-                  pauseMusic();
-                } else {
-                  // Check if the book is in the New Testament and the language is Turkish
-                  int bookIndex =
-                      bibleData.booksOfBibleTur.indexOf(widget.book);
-                  if (bookIndex >= 39 && widget.selectedLanguage == 'Turkish') {
-                    print('$bookIndex');
-                    String audioName = bibleData.turAudioName[bookIndex - 39]
-                        [widget.chapter - 1];
-                    String audioUrl =
-                        'https://incil.online/data/files/$audioName.mp3';
-
-                    playMusic(audioUrl);
-                  } else {
-                    // Display a message or take appropriate action if conditions are not met
-                    // For example, you can show a snackbar or toast message
-                    print(
-                        'The selected language is: ${widget.selectedLanguage} ${widget.book.indexOf(widget.book)}');
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            'Audio not available for this book or language.'),
-                      ),
-                    );
-                  }
-                }
-              },
-            ),
-            
-            
-            if (isPlaying) slider(),
-            const SizedBox(height: 16.0),
-            
-            
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Left button
                 ElevatedButton(
                   onPressed: () => _navigateToPreviousChapter(context),
-                  child: const Text('Previous Chapter'),
+                  child: const Text(
+                    '<',
+                    style:
+                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
+                // Play button
+                IconButton(
+                  icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                  onPressed: () async {
+                    if (isPlaying) {
+                      pauseMusic();
+                    } else {
+                      // Check if the book is in the New Testament and the language is Turkish
+                      int bookIndex =
+                          bibleData.booksOfBibleTur.indexOf(widget.book);
+                      if (bookIndex >= 39 &&
+                          widget.selectedLanguage == 'Turkish') {
+                        print('$bookIndex');
+                        String audioName = bibleData
+                            .turAudioName[bookIndex - 39][widget.chapter - 1];
+                        String audioUrl =
+                            'https://incil.online/data/files/$audioName.mp3';
+
+                        playMusic(audioUrl);
+                      } else {
+                        // Display a message or take appropriate action if conditions are not met
+                        // For example, you can show a snackbar or toast message
+                        print(
+                            'The selected language is: ${widget.selectedLanguage} ${widget.book.indexOf(widget.book)}');
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'Audio not available for this book or language.'),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                ),
+                // Right button
                 ElevatedButton(
                   onPressed: () => _navigateToNextChapter(context),
-                  child: const Text('Next Chapter'),
+                  child: const Text(
+                    '>',
+                    style:
+                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
+            if (isPlaying) slider(),
+            const SizedBox(height: 16.0),
           ],
         ),
       ),
