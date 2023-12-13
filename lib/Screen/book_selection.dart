@@ -2,6 +2,7 @@ import 'package:bible/Screen/chapter_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:bible/models/bible_data.dart';
 import 'package:bible/services/bible_data_loader.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BookSelectionWidget extends StatefulWidget {
   @override
@@ -38,12 +39,25 @@ class _BookSelectionWidgetState extends State<BookSelectionWidget> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select a Book'),
+        title: Center(
+          child: Text('Select a Book'),
+        ),
+        actions: [
+          // Add the email icon button
+          IconButton(
+            icon: Icon(Icons.email),
+            onPressed: () {
+              // Open email with the specified address and subject
+              launch(
+                'mailto:josephdaniellepalmer@me.com?subject=İncil',
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -54,7 +68,11 @@ class _BookSelectionWidgetState extends State<BookSelectionWidget> {
               items: ['English', 'Turkish'].map((language) {
                 return DropdownMenuItem<String>(
                   value: language,
-                  child: Text(language),
+                  child: Text(
+                    language,
+                    style:
+                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
@@ -80,7 +98,13 @@ class _BookSelectionWidgetState extends State<BookSelectionWidget> {
                   final selectedBook = books[index];
 
                   return ListTile(
-                    title: Text(selectedBook),
+                    title: Center(
+                      child: Text(
+                        selectedBook,
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
