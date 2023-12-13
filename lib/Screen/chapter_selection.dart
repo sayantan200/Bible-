@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bible/Screen/verse_display.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChapterSelectionWidget extends StatelessWidget {
   final String book;
@@ -21,6 +22,18 @@ class ChapterSelectionWidget extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select a Chapter - $book'),
+        actions: [
+          // Add the email icon button
+          IconButton(
+            icon: Icon(Icons.email),
+            onPressed: () {
+              // Open email with the specified address and subject
+              launch(
+                'mailto:josephdaniellepalmer@me.com?subject=İncil',
+              );
+            },
+          ),
+        ],
       ),
       body: _buildChapterList(context),
       floatingActionButton: FloatingActionButton(
@@ -47,7 +60,12 @@ class ChapterSelectionWidget extends StatelessWidget {
         itemCount: x.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text('Chapter ${x[index]}'),
+            title: Center(
+              child: Text(
+                'Chapter ${x[index]}',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+            ),
             onTap: () {
               _loadChapterContent(
                 context,
@@ -99,19 +117,20 @@ class ChapterSelectionWidget extends StatelessWidget {
       // Provide feedback to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Error loading chapter content. Please try again.'),
+          content:
+              const Text('Error loading chapter content. Please try again.'),
         ),
       );
     }
   }
 
   void _navigateToVerseDisplay(
-      BuildContext context,
-      String book,
-      int selectedChapter,
-      String chapterContent,
-      String selectedLanguage,
-      ) {
+    BuildContext context,
+    String book,
+    int selectedChapter,
+    String chapterContent,
+    String selectedLanguage,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
