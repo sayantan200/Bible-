@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bible/Screen/verse_display.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChapterSelectionWidget extends StatelessWidget {
   final String book;
@@ -21,7 +22,11 @@ class ChapterSelectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select a Chapter - $book'),
+        backgroundColor: Color.fromARGB(255, 52, 2, 230),
+        title: Text(selectedLanguage == 'English'
+            ? 'Select a Chapter - $book'
+            : 'Bir bölüm seçin - $book'),
+        centerTitle: true,
         actions: [
           // Add the email icon button
           IconButton(
@@ -62,7 +67,9 @@ class ChapterSelectionWidget extends StatelessWidget {
           return ListTile(
             title: Center(
               child: Text(
-                'Chapter ${x[index]}',
+                selectedLanguage == 'English'
+                    ? 'Chapter ${x[index]}'
+                    : 'Bölüm ${x[index]}',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
             ),
