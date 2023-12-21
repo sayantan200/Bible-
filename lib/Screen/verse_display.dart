@@ -155,7 +155,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 52, 2, 230),
+        backgroundColor: Color.fromARGB(255, 38, 83, 130),
         title: Text(' ${widget.book}     ${widget.chapter}'),
         centerTitle: true,
         actions: [
@@ -200,8 +200,8 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                   ElevatedButton(
                     onPressed: () => _navigateToPreviousChapter(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 52, 2,
-                          230), // Set the background color to transparent
+                      backgroundColor: Color.fromARGB(255, 38, 83,
+                          130), // Set the background color to transparent
                     ),
                     child: const Text(
                       '<',
@@ -258,9 +258,9 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                   ElevatedButton(
                     onPressed: () => _navigateToNextChapter(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 52, 2,
-                          230), // Set the background color to transparent
-                    ),
+                        backgroundColor: Color.fromARGB(255, 38, 83,
+                            130) // Set the background color to transparent
+                        ),
                     child: const Text(
                       '>',
                       style: TextStyle(
@@ -314,19 +314,21 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => VerseDisplayWidget(
-          book: book,
-          chapter: chapter,
-          content: chapterContent,
-          maxChapters: widget.maxChapters,
-          selectedLanguage: widget.selectedLanguage,
-        ),
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return VerseDisplayWidget(
+            book: book,
+            chapter: chapter,
+            content: chapterContent,
+            maxChapters: widget.maxChapters,
+            selectedLanguage: widget.selectedLanguage,
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return child; // Return the child directly for no transition
+        },
       ),
     );
-    if (shouldAutoPlay) {
-      playMusicForChapter(book, chapter);
-    }
   }
 
   // Navigate to the previous chapter content
@@ -364,7 +366,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
   }
 
   void playMusicForChapter(String book, int chapter) {
-    
+    // Update the audio URL based on the new chapter
     int bookIndex = getBookIndex();
     if (bookIndex >= 39 && widget.selectedLanguage == 'Turkish') {
       String audioName = bibleData.turAudioName[bookIndex - 39][widget.chapter];
