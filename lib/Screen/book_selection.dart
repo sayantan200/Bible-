@@ -40,13 +40,32 @@ class _BookSelectionWidgetState extends State<BookSelectionWidget> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text('Select a Book'),
+        backgroundColor: Color.fromARGB(255, 38, 83, 130),
+        title: Row(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                _showLanguageSelectionMenu(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 38, 83, 130),
+              ),
+              child: Text(selectedLanguage == 'English' ? 'KJV' : 'İncil'),
+            ),
+            SizedBox(
+                width: 65), // Add some spacing between the button and the title
+            Text(
+              selectedLanguage == 'English' ? 'Select a Book' : 'Bir Kitap Seç',
+            ),
+          ],
         ),
+        centerTitle: true,
         actions: [
+          // ... existing code ...
           // Add the email icon button
           IconButton(
             icon: Icon(Icons.email),
@@ -63,24 +82,6 @@ class _BookSelectionWidgetState extends State<BookSelectionWidget> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: DropdownButton<String>(
-              value: selectedLanguage,
-              items: ['English', 'Turkish'].map((language) {
-                return DropdownMenuItem<String>(
-                  value: language,
-                  child: Text(
-                    language,
-                    style:
-                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedLanguage = value!;
-                });
-              },
-            ),
           ),
           if (isLoading)
             CircularProgressIndicator(), // Show a loading indicator
@@ -125,5 +126,34 @@ class _BookSelectionWidgetState extends State<BookSelectionWidget> {
         ],
       ),
     );
+  }
+
+  void _showLanguageSelectionMenu(BuildContext context) async {
+    String? result = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(0, 100, 0, 0),
+      items: [
+        PopupMenuItem<String>(
+          value: 'English',
+          child: Text(
+            'English(King \nJames Version)',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'Turkish',
+          child: Text(
+            'Türkçe(İncil)',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+
+    if (result != null) {
+      setState(() {
+        selectedLanguage = result;
+      });
+    }
   }
 }
