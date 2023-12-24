@@ -156,7 +156,46 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 38, 83, 130),
-        title: Text(' ${widget.book}     ${widget.chapter}'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Book selection
+            ElevatedButton(
+              onPressed: () {
+                _showBookSelectionDialog(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 38, 83,
+                    130), // Set the background color to transparent
+              ),
+              child: Text(
+                widget.book,
+                style: TextStyle(
+                  fontSize: 20.0, // Set the font size as needed
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(width: 8.0), // Add some spacing
+            // Chapter selection
+            ElevatedButton(
+              onPressed: () {
+                _showChapterSelectionDialog(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 38, 83,
+                    130), // Set the background color to transparent
+              ),
+              child: Text(
+                widget.chapter.toString(),
+                style: TextStyle(
+                  fontSize: 20.0, // Set the font size as needed
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
         centerTitle: true,
         actions: [
           // Add the email icon button
@@ -184,14 +223,20 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
         child: Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: Text(
-                  widget.content,
-                  style: const TextStyle(fontSize: 23.0),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: SingleChildScrollView(
+                  child: Text(
+                    widget.content,
+                    style: const TextStyle(fontSize: 23.0),
+                  ),
                 ),
               ),
             ),
             Container(
+              constraints: BoxConstraints(
+                minHeight: 58.0,
+              ),
               color: Color.fromARGB(255, 38, 83, 130),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,10 +248,9 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                       backgroundColor: Color.fromARGB(255, 38, 83,
                           130), // Set the background color to transparent
                     ),
-                    child: const Text(
-                      '<',
-                      style: TextStyle(
-                          fontSize: 25.0, fontWeight: FontWeight.bold),
+                    child: Icon(
+                      Icons.arrow_back,
+                      size: 45,
                     ),
                   ),
                   // Play button
@@ -217,10 +261,11 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                         isPlaying
                             ? 'assets/images/pausebutton.png'
                             : 'assets/images/playbutton.png',
-                        width: 24.0, // Set the width as needed
-                        height: 24.0, // Set the height as needed
+                        width: 50.0, // Set the width as needed
+                        height: 50.0, // Set the height as needed
                         // Set the height as needed
                       ),
+                      iconSize: 56.0,
                       onPressed: () async {
                         if (isPlaying) {
                           pauseMusic();
@@ -261,12 +306,9 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                         backgroundColor: Color.fromARGB(255, 38, 83,
                             130) // Set the background color to transparent
                         ),
-                    child: const Text(
-                      '>',
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Icon(
+                      Icons.arrow_forward,
+                      size: 45,
                     ),
                   ),
                 ],
@@ -383,5 +425,121 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
         : bibleData.booksOfBibleTur.indexOf(widget.book);
 
     return bookIndex;
+  }
+
+  // Show book selection dialog
+  Future<void> _showBookSelectionDialog(BuildContext context) async {
+    String? selectedBook = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+            child: Text('Book Choice'),
+          ),
+          contentPadding:
+              EdgeInsets.only(top: 20.0), // Adjust the top padding as needed
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.5,
+            height: MediaQuery.of(context).size.height * 0.75,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (String book in widget.selectedLanguage == 'English'
+                      ? bibleData.booksOfBibleEng
+                      : bibleData.booksOfBibleTur)
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context, book);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(
+                          255,
+                          255,
+                          255,
+                          255,
+                        ),
+                      ),
+                      child: Text(
+                        book,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    print("$selectedBook");
+
+    if (selectedBook != null) {
+      _navigateToChapterContent(context, selectedBook, 1);
+    }
+  }
+
+// Show chapter selection dialog
+  Future<void> _showChapterSelectionDialog(BuildContext context) async {
+    int? selectedChapter = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        int bookIndex = widget.selectedLanguage == 'English'
+            ? bibleData.booksOfBibleEng.indexOf(widget.book)
+            : bibleData.booksOfBibleTur.indexOf(widget.book);
+
+        return AlertDialog(
+          title: Center(
+            child: Text('Chapters'),
+          ),
+          contentPadding: EdgeInsets.only(top: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          content: Container(
+            width: MediaQuery.of(context).size.width *
+                0.2, // Set the width as needed
+            height: MediaQuery.of(context).size.height *
+                0.75, // Set the height as needed
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (int i = 1; i <= bibleData.chaptersForAll[bookIndex]; i++)
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context, i);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(
+                          255,
+                          255,
+                          255,
+                          255,
+                        ),
+                      ),
+                      child: Text(
+                        i.toString(),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    if (selectedChapter != null) {
+      _navigateToChapterContent(context, widget.book, selectedChapter);
+    }
   }
 }
