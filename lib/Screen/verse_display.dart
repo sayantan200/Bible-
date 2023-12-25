@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bible/models/bible_data.dart';
 import 'package:bible/Services/bible_data_loader.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerseDisplayWidget extends StatefulWidget {
   final String book;
@@ -30,6 +31,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
   bool isPlaying = false;
   int timeProgress = 0;
   int audioDuration = 0;
+  String selectedLanguage = '';
 
   Widget slider() {
     return Column(
@@ -88,20 +90,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
 
   Future<void> _loadBibleData() async {
     try {
-      if (!mounted) return; // Check if the widget is still mounted
-
-      setState(() {
-        // Set up a loading state if needed
-      });
-
       bibleData = await BibleDataService().loadBibleData();
-
-      if (mounted) {
-        // Check again if the widget is still mounted before setting the state
-        setState(() {
-          // Clear the loading state if needed
-        });
-      }
     } catch (e) {
       print('Error loading Bible data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -116,6 +105,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
   void initState() {
     super.initState();
     audioPlayer = AudioPlayer();
+    selectedLanguage = widget.selectedLanguage;
 
     _loadBibleData();
 
@@ -147,8 +137,8 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildVerseDisplayWidget() {
+    // Use bibleData to build the actual widget tree
     if (bibleData == null) {
       return CircularProgressIndicator(); // You can replace this with your loading widget
     }
@@ -157,28 +147,41 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 38, 83, 130),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            TextButton(
+              onPressed: () {
+                _showLanguageSelectionMenu(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 38, 83, 130),
+              ),
+              child: Text(
+                selectedLanguage == 'English' ? 'KJV' : 'İncil',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+            SizedBox(width: 65),
             // Book selection
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 _showBookSelectionDialog(context);
               },
-              style: ElevatedButton.styleFrom(
+              style: TextButton.styleFrom(
                 backgroundColor: Color.fromARGB(255, 38, 83,
                     130), // Set the background color to transparent
               ),
               child: Text(
                 widget.book,
                 style: TextStyle(
-                  fontSize: 20.0, // Set the font size as needed
-                  fontWeight: FontWeight.bold,
-                ),
+                    fontSize: 20.0, // Set the font size as needed
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
             SizedBox(width: 8.0), // Add some spacing
             // Chapter selection
-            ElevatedButton(
+            TextButton(
               onPressed: () {
                 _showChapterSelectionDialog(context);
               },
@@ -189,14 +192,13 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
               child: Text(
                 widget.chapter.toString(),
                 style: TextStyle(
-                  fontSize: 20.0, // Set the font size as needed
-                  fontWeight: FontWeight.bold,
-                ),
+                    fontSize: 20.0, // Set the font size as needed
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
           ],
         ),
-        centerTitle: true,
         actions: [
           // Add the email icon button
           IconButton(
@@ -242,7 +244,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Left button
-                  ElevatedButton(
+                  TextButton(
                     onPressed: () => _navigateToPreviousChapter(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 38, 83,
@@ -251,6 +253,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                     child: Icon(
                       Icons.arrow_back,
                       size: 45,
+                      color: Colors.white,
                     ),
                   ),
                   // Play button
@@ -300,7 +303,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                       },
                     ),
                   // Right button
-                  ElevatedButton(
+                  TextButton(
                     onPressed: () => _navigateToNextChapter(context),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 38, 83,
@@ -309,15 +312,32 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                     child: Icon(
                       Icons.arrow_forward,
                       size: 45,
+                      color: Colors.white,
                     ),
                   ),
                 ],
               ),
             ),
-            if (isPlaying) slider(),
+            //if (isPlaying) slider(),
           ],
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _loadBibleData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          // Build the widget tree once the data is loaded
+          return _buildVerseDisplayWidget();
+        } else {
+          // Show a loading indicator while data is being loaded
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 
@@ -511,7 +531,7 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
               child: Column(
                 children: [
                   for (int i = 1; i <= bibleData.chaptersForAll[bookIndex]; i++)
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.pop(context, i);
                       },
@@ -540,6 +560,62 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
 
     if (selectedChapter != null) {
       _navigateToChapterContent(context, widget.book, selectedChapter);
+    }
+  }
+
+  void _showLanguageSelectionMenu(BuildContext context) async {
+    String? language = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(0, 80, 0, 0),
+      items: [
+        PopupMenuItem<String>(
+          value: 'English',
+          child: Text(
+            'English (King \nJames Version)',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'Turkish',
+          child: Text(
+            'Türkçe (İncil)',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+
+    String books = language == 'English'
+        ? bibleData.booksOfBibleEng[getBookIndex()]
+        : bibleData.booksOfBibleTur[getBookIndex()];
+    String filePath =
+        'assets/${language == 'English' ? 'Eng' : 'Tur'}/$books/$books${widget.chapter}.txt';
+    String chapterContent = await rootBundle.loadString(filePath);
+    print(
+        "language is $language , book is ${books} , chapter is ${widget.chapter} , book index ${getBookIndex()} , book in english ${bibleData.booksOfBibleEng[getBookIndex()]},\n file path $filePath");
+    if (language != null) {
+      setState(() {
+        selectedLanguage = language;
+      });
+      // Get the current route
+      // Get the current route
+      Route<dynamic>? route = ModalRoute.of(context);
+
+      // Check if the route is a MaterialPageRoute and has settings
+
+      // Reload the page with the selected language and updated book
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerseDisplayWidget(
+            book: books,
+            chapter: widget.chapter,
+            content: chapterContent,
+            maxChapters: widget.maxChapters,
+            selectedLanguage: language,
+          ),
+        ),
+      );
     }
   }
 }
