@@ -1,12 +1,31 @@
+import 'dart:async';
+import 'package:bible/utils/shared_pref_constraints.dart';
 import 'package:flutter/material.dart';
-import 'package:bible/Screen/book_selection.dart';
 import 'package:bible/Screen/verse_display.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    Timer(Duration(milliseconds: 1), () async {
+      AppConstraints.chapterNameVal =
+          await sharedPref.getChapterName() ?? "Matta";
+      AppConstraints.chapterNumberVal =
+          await sharedPref.getChapterNumber() ?? 1;
+      AppConstraints.languageVal = await sharedPref.getLanguage() ?? "Turkish";
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,13 +40,13 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return VerseDisplayWidget(
-              book:
-                  'Matta', // You can use the actual value or retrieve it from your data
-              chapter: 1,
+              book: AppConstraints
+                  .chapterNameVal, // You can use the actual value or retrieve it from your data
+              chapter: AppConstraints.chapterNumberVal,
               content: snapshot.data
                   .toString(), // Pass the loaded chapter content here
               maxChapters: [], // Provide max chapters if needed
-              selectedLanguage: 'Turkish',
+              selectedLanguage: AppConstraints.languageVal,
             );
           } else {
             return CircularProgressIndicator(); // Show a loading indicator while the content is loading
@@ -37,4 +56,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
