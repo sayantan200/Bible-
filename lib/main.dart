@@ -40,13 +40,13 @@ class _MyAppState extends State<MyApp> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return VerseDisplayWidget(
-              book: AppConstraints
-                  .chapterNameVal, // You can use the actual value or retrieve it from your data
-              chapter: AppConstraints.chapterNumberVal,
+              book: AppConstraints.chapterNameVal ??
+                  "Matta", // You can use the actual value or retrieve it from your data
+              chapter: AppConstraints.chapterNumberVal ?? 1,
               content: snapshot.data
                   .toString(), // Pass the loaded chapter content here
               maxChapters: [], // Provide max chapters if needed
-              selectedLanguage: AppConstraints.languageVal,
+              selectedLanguage: AppConstraints.languageVal ?? "Turkish",
             );
           } else {
             return CircularProgressIndicator(); // Show a loading indicator while the content is loading

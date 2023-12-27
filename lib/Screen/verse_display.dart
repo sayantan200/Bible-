@@ -1,4 +1,5 @@
 import 'package:bible/controller/play_controller.dart';
+import 'package:bible/utils/shared_pref_constraints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -507,8 +508,14 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
     );
     print("$selectedBook");
 
+    await sharedPref.setChapterName(selectedBook!);
+    selectedBook = await sharedPref.getChapterName();
+
+    await sharedPref.setChapterNumber(1);
+    int selectedNumber = await sharedPref.getChapterNumber() ?? 1;
+
     if (selectedBook != null) {
-      _navigateToChapterContent(context, selectedBook, 1);
+      _navigateToChapterContent(context, selectedBook, selectedNumber);
     }
   }
 
@@ -565,6 +572,9 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
       },
     );
 
+    await sharedPref.setChapterNumber(selectedChapter!);
+    selectedChapter = await sharedPref.getChapterNumber();
+
     if (selectedChapter != null) {
       _navigateToChapterContent(context, widget.book, selectedChapter);
     }
@@ -592,6 +602,9 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
       ],
     );
 
+    await sharedPref.setLanguage(language!);
+    AppConstraints.languageVal = await sharedPref.getLanguage();
+    language = await sharedPref.getLanguage();
     String books = language == 'English'
         ? bibleData.booksOfBibleEng[getBookIndex()]
         : bibleData.booksOfBibleTur[getBookIndex()];
@@ -602,24 +615,27 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
         "language is $language , book is ${books} , chapter is ${widget.chapter} , book index ${getBookIndex()} , book in english ${bibleData.booksOfBibleEng[getBookIndex()]},\n file path $filePath");
     if (language != null) {
       setState(() {
-        selectedLanguage = language;
+        selectedLanguage = language ?? 'English';
       });
       // Get the current route
       // Get the current route
       Route<dynamic>? route = ModalRoute.of(context);
 
-      // Check if the route is a MaterialPageRoute and has settings
+      AppConstraints.chapterNumberVal = await sharedPref.getChapterNumber();
+      AppConstraints.chapterNameVal = await sharedPref.getChapterName();
+      AppConstraints.languageVal = await sharedPref.getLanguage();
 
+      // Check if the route is a MaterialPageRoute and has settings
       // Reload the page with the selected language and updated book
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => VerseDisplayWidget(
             book: books,
-            chapter: widget.chapter,
+            chapter: AppConstraints.chapterNumberVal ?? 1,
             content: chapterContent,
             maxChapters: widget.maxChapters,
-            selectedLanguage: language,
+            selectedLanguage: selectedLanguage,
           ),
         ),
       );

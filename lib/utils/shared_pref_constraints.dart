@@ -6,9 +6,9 @@ class AppConstraints {
   static const String chapterNumber = "ChapterNumber";
   static const String language = "Language";
 
-  static String chapterNameVal = "Matta";
-  static int chapterNumberVal = 1;
-  static String languageVal = "Turkish";
+  static String? chapterNameVal;
+  static int? chapterNumberVal;
+  static String? languageVal;
 }
 
 SharedPref sharedPref = SharedPref();
