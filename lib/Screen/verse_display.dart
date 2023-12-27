@@ -1,10 +1,12 @@
+import 'package:bible/controller/play_controller.dart';
+import 'package:bible/utils/shared_pref_constraints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bible/models/bible_data.dart';
 import 'package:bible/Services/bible_data_loader.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class VerseDisplayWidget extends StatefulWidget {
   final String book;
@@ -28,10 +30,11 @@ class VerseDisplayWidget extends StatefulWidget {
 class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
   AudioPlayer audioPlayer = AudioPlayer();
   bool shouldAutoPlay = true;
-  bool isPlaying = false;
+  // bool isPlaying = false;
   int timeProgress = 0;
   int audioDuration = 0;
   String selectedLanguage = '';
+  final playController = Get.put(PlayController());
 
   Widget slider() {
     return Column(
@@ -67,18 +70,20 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
 
   pauseMusic() async {
     await audioPlayer.pause();
-    setState(() {
-      isPlaying = false;
-    });
+    playController.isPlayed.value = false;
+    // setState(() {
+    //   isPlaying = false;
+    // });
   }
 
   void playMusic(String audioUrl) async {
     try {
       await audioPlayer.play(UrlSource(audioUrl));
       if (mounted) {
-        setState(() {
-          isPlaying = true;
-        });
+        playController.isPlayed.value = true;
+        // setState(() {
+        //   isPlaying = true;
+        // });
       }
     } catch (e) {
       print('Error playing audio: $e');
@@ -110,17 +115,17 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
     _loadBibleData();
 
     audioPlayer.onDurationChanged.listen((Duration duration) {
-      setState(() {
-        audioDuration = duration.inSeconds;
-      });
+      // setState(() {
+      //   audioDuration = duration.inSeconds;
+      // });
       print('Duration changed: $audioDuration seconds');
     });
 
     audioPlayer.onPositionChanged.listen((Duration position) {
-      setState(() {
-        timeProgress = position.inSeconds;
-        print('Duration changed: $timeProgress seconds');
-      });
+      // setState(() {
+      //   timeProgress = position.inSeconds;
+      //   print('Duration changed: $timeProgress seconds');
+      // });
     });
 
     audioPlayer.onPlayerComplete.listen((event) {
@@ -259,49 +264,52 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
                   // Play button
                   if (getBookIndex() >= 39 &&
                       widget.selectedLanguage == 'Turkish')
-                    IconButton(
-                      icon: Image.asset(
-                        isPlaying
-                            ? 'assets/images/pausebutton.png'
-                            : 'assets/images/playbutton.png',
-                        width: 50.0, // Set the width as needed
-                        height: 50.0, // Set the height as needed
-                        // Set the height as needed
-                      ),
-                      iconSize: 56.0,
-                      onPressed: () async {
-                        if (isPlaying) {
-                          pauseMusic();
-                        } else {
-                          // Check if the book is in the New Testament and the language is Turkish
-                          int bookIndex =
-                              bibleData.booksOfBibleTur.indexOf(widget.book);
-                          if (bookIndex >= 39 &&
-                              widget.selectedLanguage == 'Turkish') {
-                            print('$bookIndex');
-                            String audioName =
-                                bibleData.turAudioName[bookIndex - 39]
-                                    [widget.chapter - 1];
-                            String audioUrl =
-                                'https://incil.online/data/files/$audioName.mp3';
-
-                            playMusic(audioUrl);
+                    Obx(
+                      () => IconButton(
+                        icon: Image.asset(
+                          playController.isPlayed.value
+                              ? 'assets/images/pausebutton.png'
+                              : 'assets/images/playbutton.png',
+                          width: 50.0, // Set the width as needed
+                          height: 50.0, // Set the height as needed
+                          // Set the height as needed
+                        ),
+                        iconSize: 56.0,
+                        onPressed: () async {
+                          if (playController.isPlayed.value) {
+                            pauseMusic();
                           } else {
-                            // Display a message or take appropriate action if conditions are not met
-                            // For example, you can show a snackbar or toast message
-                            print(
-                                'The selected language is: ${widget.selectedLanguage} ${widget.book.indexOf(widget.book)}');
+                            // Check if the book is in the New Testament and the language is Turkish
+                            int bookIndex =
+                                bibleData.booksOfBibleTur.indexOf(widget.book);
+                            if (bookIndex >= 39 &&
+                                widget.selectedLanguage == 'Turkish') {
+                              print('$bookIndex');
+                              String audioName =
+                                  bibleData.turAudioName[bookIndex - 39]
+                                      [widget.chapter - 1];
+                              String audioUrl =
+                                  'https://incil.online/data/files/$audioName.mp3';
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    'Audio not available for this book or language.'),
-                              ),
-                            );
+                              playMusic(audioUrl);
+                            } else {
+                              // Display a message or take appropriate action if conditions are not met
+                              // For example, you can show a snackbar or toast message
+                              print(
+                                  'The selected language is: ${widget.selectedLanguage} ${widget.book.indexOf(widget.book)}');
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Audio not available for this book or language.'),
+                                ),
+                              );
+                            }
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
+
                   // Right button
                   TextButton(
                     onPressed: () => _navigateToNextChapter(context),
@@ -500,8 +508,14 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
     );
     print("$selectedBook");
 
+    await sharedPref.setChapterName(selectedBook!);
+    selectedBook = await sharedPref.getChapterName();
+
+    await sharedPref.setChapterNumber(1);
+    int selectedNumber = await sharedPref.getChapterNumber() ?? 1;
+
     if (selectedBook != null) {
-      _navigateToChapterContent(context, selectedBook, 1);
+      _navigateToChapterContent(context, selectedBook, selectedNumber);
     }
   }
 
@@ -558,6 +572,9 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
       },
     );
 
+    await sharedPref.setChapterNumber(selectedChapter!);
+    selectedChapter = await sharedPref.getChapterNumber();
+
     if (selectedChapter != null) {
       _navigateToChapterContent(context, widget.book, selectedChapter);
     }
@@ -585,6 +602,9 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
       ],
     );
 
+    await sharedPref.setLanguage(language!);
+    AppConstraints.languageVal = await sharedPref.getLanguage();
+    language = await sharedPref.getLanguage();
     String books = language == 'English'
         ? bibleData.booksOfBibleEng[getBookIndex()]
         : bibleData.booksOfBibleTur[getBookIndex()];
@@ -595,24 +615,27 @@ class _VerseDisplayWidgetState extends State<VerseDisplayWidget> {
         "language is $language , book is ${books} , chapter is ${widget.chapter} , book index ${getBookIndex()} , book in english ${bibleData.booksOfBibleEng[getBookIndex()]},\n file path $filePath");
     if (language != null) {
       setState(() {
-        selectedLanguage = language;
+        selectedLanguage = language ?? 'English';
       });
       // Get the current route
       // Get the current route
       Route<dynamic>? route = ModalRoute.of(context);
 
-      // Check if the route is a MaterialPageRoute and has settings
+      AppConstraints.chapterNumberVal = await sharedPref.getChapterNumber();
+      AppConstraints.chapterNameVal = await sharedPref.getChapterName();
+      AppConstraints.languageVal = await sharedPref.getLanguage();
 
+      // Check if the route is a MaterialPageRoute and has settings
       // Reload the page with the selected language and updated book
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => VerseDisplayWidget(
             book: books,
-            chapter: widget.chapter,
+            chapter: AppConstraints.chapterNumberVal ?? 1,
             content: chapterContent,
             maxChapters: widget.maxChapters,
-            selectedLanguage: language,
+            selectedLanguage: selectedLanguage,
           ),
         ),
       );
